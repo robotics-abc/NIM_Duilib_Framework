@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "base/win32/path_util.h"
 #include "base/thread/thread_manager.h"
 
