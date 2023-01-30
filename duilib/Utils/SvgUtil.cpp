@@ -75,9 +75,8 @@ std::unique_ptr<ui::ImageInfo> SvgUtil::LoadImageBySvg(void *data, const std::ws
 	if (w == 0 || h == 0 || rast == NULL)
 		return nullptr;
 
-	float scale = (float)DpiManager::GetInstance()->GetScale() / 100;
-	w *= scale;
-	h *= scale;
+	w = MulDiv(w, DpiManager::GetInstance()->GetScale(), 100);
+    h = MulDiv(h, DpiManager::GetInstance()->GetScale(), 100);
 
 	unsigned char* pBmpBits = NULL;
 	HDC hdc = GetDC(NULL);
@@ -89,7 +88,9 @@ std::unique_ptr<ui::ImageInfo> SvgUtil::LoadImageBySvg(void *data, const std::ws
 		ASSERT(FALSE);
 		return nullptr;
 	}
-	nsvgRasterize(rast.get(), svg.get(), 0, 0, scale, pBmpBits, w, h, w * 4);
+        nsvgRasterize(rast.get(), svg.get(), 0, 0,
+                      (float)DpiManager::GetInstance()->GetScale() / 100,
+                      pBmpBits, w, h, w * 4);
 
 	// nanosvg内部已经做过alpha预乘，这里只做R和B的交换
 	for (int y = 0; y < h; y++) {
